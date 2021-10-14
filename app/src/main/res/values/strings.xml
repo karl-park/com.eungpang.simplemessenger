@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Simple Messenger</string>
+    <string name="copyright">© Copyright 2021 Karl Panki Park</string>
+
+    <string name="fab_extend">Extend</string>
+
 </resources>
