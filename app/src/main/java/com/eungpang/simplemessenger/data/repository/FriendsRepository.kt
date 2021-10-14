@@ -20,6 +20,7 @@ class MockFriendsRepositoryImpl: FriendsRepository {
             Profile(
                 "echobot-1",
                 "Jone",
+                "https://www.jenkins.io/images/logos/snow/snow.png",
                 null,
                 "echobot1@eungpang.com",
                 Date(1634225659469L),
@@ -28,6 +29,7 @@ class MockFriendsRepositoryImpl: FriendsRepository {
             Profile(
                 "echobot-2",
                 "Kent",
+                "https://www.jenkins.io/images/logos/cute/cute.png",
                 null,
                 "echobot2@eungpang.com",
                 Date(1634225659469L),

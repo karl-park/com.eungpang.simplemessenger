@@ -2,6 +2,7 @@ package com.eungpang.simplemessenger.domain.friend
 
 import com.eungpang.simplemessenger.data.repository.FriendsRepository
 import com.eungpang.simplemessenger.domain.common.Result
+import com.eungpang.simplemessenger.shared.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -12,7 +13,7 @@ interface GetFriendsListUseCase {
 
 class GetFriendsListUseCaseImpl @Inject constructor(
     private val repo: FriendsRepository,
-    private val dispatcher: CoroutineDispatcher
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : GetFriendsListUseCase {
     override suspend fun invoke(userId: String): Result<List<Profile>> =
         try {

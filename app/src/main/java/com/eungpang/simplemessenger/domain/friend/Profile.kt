@@ -6,6 +6,7 @@ import java.util.*
 data class Profile(
     val userId: String,
     val name: String,
+    val avatarUrl: String?,
     val status: String?,
     val email: String?,
     val createdDate: Date,
