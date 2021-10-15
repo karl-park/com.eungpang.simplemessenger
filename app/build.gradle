@@ -57,9 +57,14 @@ dependencies {
     implementation AndroidX.Navigation.fragment
     implementation AndroidX.Navigation.ui
 
+    implementation AndroidX.Room.roomRuntime
+    kapt AndroidX.Room.roomKapt
+    implementation AndroidX.Room.roomKtx
+
     implementation Kotlin.coroutine
     implementation Dagger.hiltAndroid
     kapt Dagger.hiltCompiler
+
 
 
     implementation Glide.glide
