@@ -133,6 +133,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/domain/chat/GetChatHistoryUseCase.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/domain/chat/Message.kt">
           <value>
             <set />
@@ -183,6 +188,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/shared/livedata/SingleLiveEvent.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/ui/MainActivity.kt">
           <value>
             <set />
@@ -194,6 +204,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/ui/chat/ConversationActivity.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/ui/chat/adapter/ConversationAdapter.kt">
           <value>
             <set />
           </value>

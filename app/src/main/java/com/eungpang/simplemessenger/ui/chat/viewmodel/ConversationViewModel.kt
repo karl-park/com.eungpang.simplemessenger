@@ -13,6 +13,7 @@ import com.eungpang.simplemessenger.domain.common.Result
 import com.eungpang.simplemessenger.domain.friend.GetUserProfileUseCase
 import com.eungpang.simplemessenger.domain.friend.Profile
 import com.eungpang.simplemessenger.shared.ConstantPref
+import com.eungpang.simplemessenger.shared.livedata.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -44,6 +45,13 @@ class ConversationViewModel @Inject constructor(
     val friendId: String
         get() = _friendId
 
+    val actionState = SingleLiveEvent<ActionState>()
+    sealed class ActionState {
+        class GoBackWithMessage(
+            val message: String
+        ): ActionState()
+    }
+
     init {
         val pref = app.getSharedPreferences(ConstantPref.KEY_PREF_NAME, Application.MODE_PRIVATE)
         userId = pref.getString(ConstantPref.KEY_USER_ID, "")!! // If it's null, should throw exception or redirect user to logout view
@@ -54,7 +62,7 @@ class ConversationViewModel @Inject constructor(
                     _myProfile = result.data
                 }
                 else -> {
-                    // TODO: error, user not found
+                    actionState.postValue(ActionState.GoBackWithMessage("Sorry. Something is wrong. Try again."))
                 }
             }
         }
@@ -63,18 +71,13 @@ class ConversationViewModel @Inject constructor(
     fun loadChatHistory(friendId: String) {
         viewModelScope.launch {
             this@ConversationViewModel._friendId = friendId
-            val roomId = retrieveRoomId(userId, friendId)
-            val result = getChatHistoryUseCase.invoke(
-                roomId,
-                currentPage,
-                DEFAULT_LIMIT
-            )
+            val result = getChatHistoryUseCase.invoke(userId, friendId, currentPage, DEFAULT_LIMIT)
 
             // Load Friend Profile Once
             if (::_friendProfile.isInitialized.not()) {
                 val friendProfileResult = getUserProfileUseCase.invoke(friendId)
                 if (friendProfileResult !is Result.Success) {
-                    // TODO: show alert/toast or retry button to load chat history
+                    actionState.postValue(ActionState.GoBackWithMessage("Sorry. Something is wrong. Try again."))
                     return@launch
                 }
                 _friendProfile = friendProfileResult.data
@@ -91,7 +94,7 @@ class ConversationViewModel @Inject constructor(
                     })
                 }
                 else -> {
-                    // TODO: show alert/toast or retry button to load chat history
+                    actionState.postValue(ActionState.GoBackWithMessage("Sorry. Something is wrong while loading chat history. Try again."))
                 }
             }
         }
@@ -101,7 +104,7 @@ class ConversationViewModel @Inject constructor(
         sendMessageToFriend(
             Message(
                 userId,
-                retrieveRoomId(userId, _friendProfile.userId),
+                _friendProfile.userId,
                 message
             )
         )
@@ -153,12 +156,6 @@ class ConversationViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun retrieveRoomId(loggedInId: String, friendId: String) : String {
-        // TODO: do refactoring to pass just loggedInId and friendId
-        //  RoomId should be calculated from UseCases or Repositories.
-        return listOf(loggedInId, friendId).sorted().joinToString("||")
     }
 }
 

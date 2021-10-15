@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.eungpang.simplemessenger.domain.bot.BotType
 import com.eungpang.simplemessenger.domain.chat.GetChatHistoryUseCase
 import com.eungpang.simplemessenger.domain.chat.Message
 import com.eungpang.simplemessenger.domain.common.Result
@@ -50,9 +51,9 @@ class FriendsViewModel @Inject constructor(
                 is Result.Success -> {
                     _friends.postValue(
                         result.data.map {
-                            val roomId = retrieveRoomId(userId, it.userId)
                             val getLastChatHistoryResult = getChatHistoryUseCase.invoke(
-                                roomId,
+                                userId,
+                                it.userId,
                                 0,
                                 1
                             )
@@ -100,9 +101,10 @@ class FriendsViewModel @Inject constructor(
                 BOT_AVATAR_URL_LIST.random(),
                 null,
                 null,
-                Date()
+                Date(),
+                BotType.EchoBot
             )
-            when (val result = addUserProfileUseCase.invoke(botProfile)) {
+            when (addUserProfileUseCase.invoke(botProfile)) {
                 is Result.Success -> {
                     val friendList = _friends.value ?: emptyList()
                     _friends.postValue(friendList.toMutableList().apply {
@@ -118,12 +120,6 @@ class FriendsViewModel @Inject constructor(
 
     private fun onClickFriendViewItem(profile: Profile) {
         actionState.postValue(ActionState.GoToConversationView(profile))
-    }
-
-    private fun retrieveRoomId(loggedInId: String, friendId: String) : String {
-        // TODO: do refactoring to pass just loggedInId and friendId
-        //  RoomId should be calculated from UseCases or Repositories.
-        return listOf(loggedInId, friendId).sorted().joinToString("||")
     }
 
     companion object {

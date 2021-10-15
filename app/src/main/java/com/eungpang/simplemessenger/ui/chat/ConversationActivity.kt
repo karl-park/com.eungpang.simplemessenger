@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eungpang.simplemessenger.databinding.ActivityConversationBinding
 import com.eungpang.simplemessenger.ui.chat.adapter.ConversationAdapter
+import com.eungpang.simplemessenger.ui.chat.viewmodel.ChatViewItem
 import com.eungpang.simplemessenger.ui.chat.viewmodel.ConversationViewModel
 import com.eungpang.simplemessenger.ui.extension.hideKeyboard
 import com.eungpang.simplemessenger.ui.extension.showToast
@@ -54,20 +55,21 @@ class ConversationActivity : AppCompatActivity() {
         initializeViews()
 
         viewModel.loadChatHistory(friendId)
-        viewModel.messages.observe(this) {
-            adapter.setMessages(it)
-        }
+        viewModel.messages.observe(this, ::handleMessages)
+        viewModel.actionState.observe(this, ::handleActionState)
+    }
 
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                super.onChanged()
+    private fun handleMessages(messages: List<ChatViewItem>) {
+        adapter.setMessages(messages)
+    }
 
-                if (adapter.itemCount > 0) {
-                    val lm = binding.rvChat.layoutManager as LinearLayoutManager
-                    lm.smoothScrollToPosition(binding.rvChat, null, adapter.itemCount - 1)
-                }
+    private fun handleActionState(actionState: ConversationViewModel.ActionState) {
+        when (actionState) {
+            is ConversationViewModel.ActionState.GoBackWithMessage -> {
+                showToast(actionState.message)
+                finish()
             }
-        })
+        }
     }
 
     private fun initializeViews() {
@@ -83,8 +85,7 @@ class ConversationActivity : AppCompatActivity() {
 
         binding.ivSendButtonChat.setOnClickListener {
             val message = binding.etMessageChat.text?.toString()
-            if (message.isNullOrBlank()) {
-                // If it's empty, do nothing
+            if (message.isNullOrBlank()) { // If it's empty, do nothing
                 return@setOnClickListener
             }
 
@@ -92,6 +93,17 @@ class ConversationActivity : AppCompatActivity() {
             hideKeyboard()
             viewModel.onClickSendMessage(message)
         }
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+
+                if (adapter.itemCount > 0) {
+                    val lm = binding.rvChat.layoutManager as LinearLayoutManager
+                    lm.smoothScrollToPosition(binding.rvChat, null, adapter.itemCount - 1)
+                }
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

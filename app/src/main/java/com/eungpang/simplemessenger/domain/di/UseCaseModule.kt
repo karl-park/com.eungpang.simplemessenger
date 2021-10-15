@@ -16,14 +16,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 @InstallIn(SingletonComponent::class)
 @Module
-class UseCaseModule {
+object UseCaseModule {
     @Provides
     fun provideGetFriendsListUseCase(
         repository: FriendsRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): GetFriendsListUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return GetFriendsListUseCaseImpl(repository, dispatcher)
     }
 
@@ -32,8 +30,6 @@ class UseCaseModule {
         repository: FriendsRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): AddUserProfileUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return AddUserProfileUseCaseImpl(repository, dispatcher)
     }
 
@@ -42,8 +38,6 @@ class UseCaseModule {
         repository: FriendsRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): GetUserProfileUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return GetUserProfileUseCaseImpl(repository, dispatcher)
     }
 
@@ -52,8 +46,6 @@ class UseCaseModule {
         repository: ChatRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): GetChatHistoryUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return GetChatHistoryUseCaseImpl(repository, dispatcher)
     }
 
@@ -62,8 +54,6 @@ class UseCaseModule {
         repository: ChatRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): SendMessageUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return SendMessageUseCaseImpl(repository, dispatcher)
     }
 }

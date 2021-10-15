@@ -21,7 +21,7 @@ data class MessageEntity(
         override fun mapTo(from: MessageEntity): Message =
             Message(
                 authorId = from.authorId,
-                roomId = from.roomId,
+                friendId = Message.parseUsersFromRoomId(from.roomId)?.second ?: "",
                 message = from.message,
                 createdDate = from.createdDate,
                 imageUrl = from.imageUrl,
@@ -30,7 +30,7 @@ data class MessageEntity(
         override fun mapFrom(from: Message): MessageEntity =
             MessageEntity(
                 authorId = from.authorId,
-                roomId = from.roomId,
+                roomId = Message.retrieveRoomId(from.authorId, from.friendId),
                 message = from.message,
                 createdDate = from.createdDate,
                 imageUrl = from.imageUrl,

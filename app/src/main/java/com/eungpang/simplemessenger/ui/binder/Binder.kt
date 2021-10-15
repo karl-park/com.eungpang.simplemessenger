@@ -8,7 +8,6 @@ object Binder {
     @JvmStatic
     @BindingAdapter("loadAvatar")
     fun ImageView.loadAvatar(url: String?) {
-        // TODO: validate url, and if it's invalid or failed to load, show default one
         if (url == null) {
             val defaultAvatarResourceId = resources.getIdentifier(
                 "ic_launcher_foreground",

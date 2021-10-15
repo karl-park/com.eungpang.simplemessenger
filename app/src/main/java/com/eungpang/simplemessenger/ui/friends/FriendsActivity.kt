@@ -50,7 +50,6 @@ class FriendsActivity : AppCompatActivity() {
     }
 
     private fun handleFriendsList(friends: List<FriendViewItem>) {
-        // TODO: if it's empty, please show empty view
         adapter.setFriends(friends)
     }
 

@@ -8,14 +8,25 @@ import java.util.*
 @Parcelize
 data class Message(
     val authorId: String,
-    val roomId: String,
+    val friendId: String,
     val message: String,
     val createdDate: Date = Date(),
     val imageUrl: String? = null
 ) : Parcelable {
+
     companion object {
         const val TIME_FORMAT = "hh:mm a"
         const val DATE_FORMAT = "dd MMM yy"
+        private const val DELIMITER = "|||"
+
+        fun retrieveRoomId(loggedInId: String, friendId: String) : String {
+            return listOf(loggedInId, friendId).sorted().joinToString(DELIMITER)
+        }
+
+        fun parseUsersFromRoomId(roomId: String) : Pair<String, String>? {
+            val elements = roomId.split(DELIMITER)
+            return try { Pair(elements[0], elements[1]) } catch (e: Exception) { null }
+        }
     }
 
     fun dateString() : String {
