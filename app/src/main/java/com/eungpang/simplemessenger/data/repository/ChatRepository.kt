@@ -3,6 +3,7 @@ package com.eungpang.simplemessenger.data.repository
 import android.app.Application
 import android.content.Context
 import com.eungpang.simplemessenger.data.database.SimpleMessengerDatabase
+import com.eungpang.simplemessenger.data.entity.MessageEntity
 import com.eungpang.simplemessenger.domain.chat.Message
 import com.eungpang.simplemessenger.shared.ConstantPref
 import java.util.*
@@ -23,11 +24,12 @@ class ChatRepositoryImpl(
     private val database: SimpleMessengerDatabase
 ): ChatRepository {
     override suspend fun retrieveChatHistory(roomId: String, page: Int, limit: Int): List<Message> {
-        TODO("Not yet implemented")
+        return database.messageDao().getAllMessages(roomId).map { MessageEntity.mapTo(it) }
     }
 
     override suspend fun sendMessage(message: Message): Boolean {
-        TODO("Not yet implemented")
+        database.messageDao().saveMessage(MessageEntity.mapFrom(message))
+        return true
     }
 }
 
@@ -37,7 +39,7 @@ class MockChatRepositoryImpl(
     private val userId: String
     init {
         val pref = applicationContext.getSharedPreferences(ConstantPref.KEY_PREF_NAME, Application.MODE_PRIVATE)
-        userId = pref.getString(ConstantPref.KEY_USER_ID, null)!!
+        userId = pref.getString(ConstantPref.KEY_USER_ID, "")!!
     }
 
     private val chatRepository = mutableMapOf<String, MutableList<Message>>().apply {

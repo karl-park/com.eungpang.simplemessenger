@@ -62,8 +62,10 @@ class ConversationActivity : AppCompatActivity() {
             override fun onChanged() {
                 super.onChanged()
 
-                val lm = binding.rvChat.layoutManager as LinearLayoutManager
-                lm.smoothScrollToPosition(binding.rvChat, null, adapter.itemCount - 1)
+                if (adapter.itemCount > 0) {
+                    val lm = binding.rvChat.layoutManager as LinearLayoutManager
+                    lm.smoothScrollToPosition(binding.rvChat, null, adapter.itemCount - 1)
+                }
             }
         })
     }

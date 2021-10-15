@@ -49,7 +49,7 @@
             app:layout_constraintRight_toRightOf="@id/tv_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0"
-            android:text="@{item.lastMessage.message}"
+            android:text="@{item.lastMessage.message == null ? @string/have_no_conversation(item.user.name) : item.lastMessage.message}"
             android:textColor="@color/black"
             android:layout_marginTop="@dimen/spacing_nano"
             android:textSize="@dimen/text_subtitle"

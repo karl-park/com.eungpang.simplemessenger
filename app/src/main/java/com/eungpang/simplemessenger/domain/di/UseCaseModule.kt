@@ -6,10 +6,7 @@ import com.eungpang.simplemessenger.domain.chat.GetChatHistoryUseCase
 import com.eungpang.simplemessenger.domain.chat.GetChatHistoryUseCaseImpl
 import com.eungpang.simplemessenger.domain.chat.SendMessageUseCase
 import com.eungpang.simplemessenger.domain.chat.SendMessageUseCaseImpl
-import com.eungpang.simplemessenger.domain.friend.GetFriendsListUseCase
-import com.eungpang.simplemessenger.domain.friend.GetFriendsListUseCaseImpl
-import com.eungpang.simplemessenger.domain.friend.GetUserProfileUseCase
-import com.eungpang.simplemessenger.domain.friend.GetUserProfileUseCaseImpl
+import com.eungpang.simplemessenger.domain.friend.*
 import com.eungpang.simplemessenger.shared.di.IoDispatcher
 import dagger.Module
 import dagger.Provides
@@ -31,13 +28,13 @@ class UseCaseModule {
     }
 
     @Provides
-    fun provideGetChatHistoryUseCase(
-        repository: ChatRepository,
+    fun provideAddUserProfileUseCase(
+        repository: FriendsRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
-    ): GetChatHistoryUseCase {
+    ): AddUserProfileUseCase {
         // TODO: For testing,
         //  It's better to have multiple buildTypes
-        return GetChatHistoryUseCaseImpl(repository, dispatcher)
+        return AddUserProfileUseCaseImpl(repository, dispatcher)
     }
 
     @Provides
@@ -48,6 +45,16 @@ class UseCaseModule {
         // TODO: For testing,
         //  It's better to have multiple buildTypes
         return GetUserProfileUseCaseImpl(repository, dispatcher)
+    }
+
+    @Provides
+    fun provideGetChatHistoryUseCase(
+        repository: ChatRepository,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): GetChatHistoryUseCase {
+        // TODO: For testing,
+        //  It's better to have multiple buildTypes
+        return GetChatHistoryUseCaseImpl(repository, dispatcher)
     }
 
     @Provides

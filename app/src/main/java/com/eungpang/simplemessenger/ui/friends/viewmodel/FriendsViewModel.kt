@@ -41,7 +41,7 @@ class FriendsViewModel @Inject constructor(
 
     init {
         val pref = app.getSharedPreferences(ConstantPref.KEY_PREF_NAME, Application.MODE_PRIVATE)
-        userId = pref.getString(ConstantPref.KEY_USER_ID, null)!! // If it's null, should throw exception or redirect user to logout view
+        userId = pref.getString(ConstantPref.KEY_USER_ID, "")!! // If it's null, should throw exception or redirect user to logout view
 
         viewModelScope.launch {
             when (val result = getFriendsListUseCase.invoke(userId)) {

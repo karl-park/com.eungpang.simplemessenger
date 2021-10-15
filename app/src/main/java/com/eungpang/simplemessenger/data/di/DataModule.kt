@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.eungpang.simplemessenger.data.database.SimpleMessengerDatabase
 import com.eungpang.simplemessenger.data.repository.ChatRepository
+import com.eungpang.simplemessenger.data.repository.ChatRepositoryImpl
 import com.eungpang.simplemessenger.data.repository.FriendsRepository
-import com.eungpang.simplemessenger.data.repository.MockChatRepositoryImpl
-import com.eungpang.simplemessenger.data.repository.MockFriendsRepositoryImpl
+import com.eungpang.simplemessenger.data.repository.FriendsRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,20 +33,16 @@ object DataModule {
     @Provides
     @Singleton
     fun providesFriendsRepository(
-        @ApplicationContext applicationContext: Context
+        database: SimpleMessengerDatabase
     ): FriendsRepository {
-        // TODO: For testing
-        //  It's better to have multiple buildTypes
-        return MockFriendsRepositoryImpl(applicationContext)
+        return FriendsRepositoryImpl(database)
     }
 
     @Provides
     @Singleton
     fun providesChatRepository(
-        @ApplicationContext applicationContext: Context
+        database: SimpleMessengerDatabase
     ): ChatRepository {
-        // TODO: For testing
-        //  It's better to have multiple buildTypes
-        return MockChatRepositoryImpl(applicationContext)
+        return ChatRepositoryImpl(database)
     }
 }
