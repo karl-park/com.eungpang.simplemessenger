@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.eungpang.simplemessenger.databinding.ActivityConversationBinding
 import com.eungpang.simplemessenger.ui.chat.adapter.ConversationAdapter
 import com.eungpang.simplemessenger.ui.chat.viewmodel.ConversationViewModel
@@ -25,10 +26,12 @@ class ConversationActivity : AppCompatActivity() {
     companion object {
         const val INTENT_KEY_LAST_MESSAGE = "lastMessage"
         const val INTENT_KEY_FRIEND_ID = "friendId"
+        const val INTENT_KEY_FRIEND_NAME = "friendName"
 
-        fun getIntent(context: Context, friendId: String) =
+        fun getIntent(context: Context, friendId: String, friendName: String) =
             Intent(context, ConversationActivity::class.java).apply {
                 putExtra(INTENT_KEY_FRIEND_ID, friendId)
+                putExtra(INTENT_KEY_FRIEND_NAME, friendName)
             }
     }
 
@@ -41,7 +44,8 @@ class ConversationActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val friendId = intent.getStringExtra(INTENT_KEY_FRIEND_ID)
-        if (friendId == null) {
+        val friendName = intent.getStringExtra(INTENT_KEY_FRIEND_NAME)
+        if (friendId == null || friendName == null) {
             showToast("Invalid Friend Information. Please try again.")
             finish()
             return
@@ -53,17 +57,27 @@ class ConversationActivity : AppCompatActivity() {
         viewModel.messages.observe(this) {
             adapter.setMessages(it)
         }
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+
+                val lm = binding.rvChat.layoutManager as LinearLayoutManager
+                lm.smoothScrollToPosition(binding.rvChat, null, adapter.itemCount - 1)
+            }
+        })
     }
 
     private fun initializeViews() {
-        adapter = ConversationAdapter()
+        val friendName = intent.getStringExtra(INTENT_KEY_FRIEND_NAME)
 
+        adapter = ConversationAdapter()
         binding.rvChat.run {
             layoutManager = LinearLayoutManager(this@ConversationActivity, LinearLayoutManager.VERTICAL, false)
             adapter = this@ConversationActivity.adapter
         }
 
-        binding.toolbarChat.title = "Chat"
+        binding.toolbarChat.title = friendName ?: "Chat"
 
         binding.ivSendButtonChat.setOnClickListener {
             val message = binding.etMessageChat.text?.toString()

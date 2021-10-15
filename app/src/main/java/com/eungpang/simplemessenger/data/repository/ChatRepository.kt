@@ -2,6 +2,7 @@ package com.eungpang.simplemessenger.data.repository
 
 import android.app.Application
 import android.content.Context
+import com.eungpang.simplemessenger.data.database.SimpleMessengerDatabase
 import com.eungpang.simplemessenger.domain.chat.Message
 import com.eungpang.simplemessenger.shared.ConstantPref
 import java.util.*
@@ -16,6 +17,18 @@ interface ChatRepository {
     suspend fun sendMessage(
         message: Message
     ): Boolean
+}
+
+class ChatRepositoryImpl(
+    private val database: SimpleMessengerDatabase
+): ChatRepository {
+    override suspend fun retrieveChatHistory(roomId: String, page: Int, limit: Int): List<Message> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun sendMessage(message: Message): Boolean {
+        TODO("Not yet implemented")
+    }
 }
 
 class MockChatRepositoryImpl(

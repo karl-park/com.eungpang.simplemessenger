@@ -51,7 +51,7 @@ class FriendsActivity : AppCompatActivity() {
         when (actionState) {
             is FriendsViewModel.ActionState.GoToConversationView -> {
                 getLastUpdatedMessage.launch(
-                    ConversationActivity.getIntent(this, actionState.friendProfile.userId)
+                    ConversationActivity.getIntent(this, actionState.friendProfile.userId, actionState.friendProfile.name)
                 )
             }
             is FriendsViewModel.ActionState.ShowToastMessage -> {
