@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="item"
             type="com.eungpang.simplemessenger.ui.friends.viewmodel.FriendViewItem" />
@@ -29,14 +30,33 @@
         <androidx.appcompat.widget.AppCompatTextView
             tools:text="Karl"
             android:text="@{item.user.name}"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/iv_friend_avatar"
-            app:layout_constraintRight_toLeftOf="@id/tv_updated_time"
+            app:layout_constraintRight_toLeftOf="@id/tv_tag_chat"
             android:layout_marginLeft="@dimen/spacing_nano"
             android:textColor="@color/black"
             android:textSize="@dimen/text_title"
             android:textStyle="bold"
             android:id="@+id/tv_name"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            tools:text="BOT"
+            tools:visibility="visible"
+            android:visibility="@{item.user.botType == null ? View.GONE : View.VISIBLE, default=gone}"
+            android:text="@{item.user.botType.botName}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_name"
+            app:layout_constraintRight_toLeftOf="@id/tv_updated_time"
+            app:layout_constraintBottom_toBottomOf="@id/tv_name"
+            android:layout_marginLeft="@dimen/spacing_minor"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_mini"
+            android:id="@+id/tv_tag_chat"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_width="0dp"
@@ -46,7 +66,7 @@
             tools:text="Hi, This is Karl. Nice meeting you."
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             app:layout_constraintLeft_toLeftOf="@id/tv_name"
-            app:layout_constraintRight_toRightOf="@id/tv_name"
+            app:layout_constraintRight_toLeftOf="@id/tv_updated_time"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0"
             android:text="@{item.lastMessage.message == null ? @string/have_no_conversation(item.user.name) : item.lastMessage.message}"

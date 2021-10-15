@@ -39,7 +39,7 @@ class ConversationViewModel @Inject constructor(
     val messages: LiveData<List<ChatViewItem>> = _messages
 
     val lastMessage: Message?
-        get() = messages.value?.last()?.message
+        get() = messages.value?.lastOrNull()?.message
 
     val friendId: String
         get() = _friendId

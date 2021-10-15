@@ -198,6 +198,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/ui/chat/viewmodel/ConversationViewModel.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/eungpang/simplemessenger/ui/di/CoroutinesModule.kt">
           <value>
             <set />
