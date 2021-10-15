@@ -137,6 +137,7 @@ class ConversationViewModel @Inject constructor(
                 BotType.EchoBot -> {
                     val newMessage = message.copy(
                         authorId = friendId,
+                        friendId = userId,
                         createdDate = Date()
                     )
 
