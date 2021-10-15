@@ -5,12 +5,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.eungpang.simplemessenger.domain.chat.Message
 import com.eungpang.simplemessenger.domain.common.Result
 import com.eungpang.simplemessenger.domain.friend.GetFriendsListUseCase
 import com.eungpang.simplemessenger.domain.friend.Profile
 import com.eungpang.simplemessenger.shared.ConstantPref
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,8 +22,8 @@ class FriendsViewModel @Inject constructor(
 ) : AndroidViewModel(app) {
     private val userId: String
 
-    private val _friends = MutableLiveData<List<Profile>>()
-    val friends: LiveData<List<Profile>> = _friends
+    private val _friends = MutableLiveData<List<FriendViewItem>>()
+    val friends: LiveData<List<FriendViewItem>> = _friends
 
     init {
         val pref = app.getSharedPreferences(ConstantPref.KEY_PREF_NAME, Application.MODE_PRIVATE)
@@ -31,7 +33,12 @@ class FriendsViewModel @Inject constructor(
             val result = getFriendsListUseCase.invoke(userId)
             when (result) {
                 is Result.Success -> {
-                    _friends.postValue(result.data ?: listOf())
+                    _friends.postValue(
+                        result.data.map {
+                            // TODO: need to retreive lastMessage
+                            FriendViewItem(it, null, ::onClickFriendViewItem)
+                        }
+                    )
                 }
                 is Result.Loading -> {
 
@@ -42,4 +49,15 @@ class FriendsViewModel @Inject constructor(
             }
         }
     }
+
+    private fun onClickFriendViewItem(profile: Profile) {
+        // Todo: need to redirect user to Conversation View
+        Timber.d("Friend View Item Clicked: $profile")
+    }
 }
+
+data class FriendViewItem(
+    val user: Profile,
+    val lastMessage: Message?,
+    val onAction: (Profile) -> (Unit)
+)

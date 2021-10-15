@@ -6,10 +6,11 @@
     <data>
         <variable
             name="item"
-            type="com.eungpang.simplemessenger.domain.friend.Profile" />
+            type="com.eungpang.simplemessenger.ui.friends.viewmodel.FriendViewItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> item.onAction.invoke(item.user)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing_major">
@@ -19,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:loadAvatar="@{item.avatarUrl}"
+            app:loadAvatar="@{item.user.avatarUrl}"
             android:scaleType="centerCrop"
             android:id="@+id/iv_friend_avatar"
             android:layout_width="@dimen/size_avatar_image"
@@ -27,7 +28,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             tools:text="Karl"
-            android:text="@{item.name}"
+            android:text="@{item.user.name}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/iv_friend_avatar"
             app:layout_constraintRight_toLeftOf="@id/tv_updated_time"
@@ -46,7 +47,7 @@
             app:layout_constraintRight_toRightOf="@id/tv_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0"
-            android:text=""
+            android:text="@{item.lastMessage.message}"
             android:layout_marginTop="@dimen/spacing_nano"
             android:textSize="@dimen/text_subtitle"
             android:id="@+id/tv_message"
@@ -63,7 +64,7 @@
             android:layout_marginLeft="@dimen/spacing_nano"
             android:textSize="@dimen/text_mini"
             android:id="@+id/tv_updated_time"
-            android:text=""
+            android:text="@{item.lastMessage.dateString}"
             android:maxLines="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

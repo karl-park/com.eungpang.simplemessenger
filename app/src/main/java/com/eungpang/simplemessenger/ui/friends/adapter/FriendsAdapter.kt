@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.eungpang.simplemessenger.databinding.ItemFriendsBinding
-import com.eungpang.simplemessenger.domain.friend.Profile
+import com.eungpang.simplemessenger.ui.friends.viewmodel.FriendViewItem
 
 // TODO: need to pass event handler(or it can be inside of ViewData class)
 class FriendsAdapter(
 
 ): RecyclerView.Adapter<FriendsAdapter.FriendViewHolder>() {
-    private val _friends = mutableListOf<Profile>()
-    fun setFriends(friends: List<Profile>) {
+    private val _friends = mutableListOf<FriendViewItem>()
+    fun setFriends(friends: List<FriendViewItem>) {
         _friends.run {
             clear()
             addAll(friends)
@@ -37,9 +37,9 @@ class FriendsAdapter(
     class FriendViewHolder(
         private val binding: ItemFriendsBinding
     ): RecyclerView.ViewHolder(binding.root) {
-        fun bind(profile: Profile) {
+        fun bind(viewItem: FriendViewItem) {
             // TODO: bind it (data + events)
-            binding.item = profile
+            binding.item = viewItem
             binding.executePendingBindings()
         }
     }

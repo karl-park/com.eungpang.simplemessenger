@@ -32,7 +32,7 @@ class MockFriendsRepositoryImpl: FriendsRepository {
                 "https://www.jenkins.io/images/logos/cute/cute.png",
                 null,
                 "echobot2@eungpang.com",
-                Date(1634225659469L),
+                Date(1632025656469L),
                 BotType.EchoBot
             )
         )
