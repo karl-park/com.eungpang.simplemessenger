@@ -1,8 +1,17 @@
 <resources>
+    <string name="developer_name">Karl Park</string>
+
     <string name="app_name">Simple Messenger</string>
     <string name="copyright">© Copyright 2021 Karl Panki Park</string>
 
     <string name="fab_extend">Extend</string>
+
+    <!-- Login -->
+    <string name="tell_me_your_name">What should I call you?</string>
+    <string name="letsgo">Let\'s Go 🥳</string>
+
+    <!-- Friends -->
+    <string name="have_no_conversation">Tap to start conversation with %s</string>
 
     <!-- Conversation -->
     <string name="chat_hint_text">Message</string>

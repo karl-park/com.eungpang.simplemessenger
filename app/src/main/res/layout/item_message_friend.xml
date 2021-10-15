@@ -40,7 +40,7 @@
             tools:text="Karl"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/iv_avatar_chat"
-            android:layout_marginLeft="@dimen/spacing_nano"
+            android:layout_marginStart="@dimen/spacing_nano"
             android:id="@+id/tv_name_chat"
             android:text="@{item.profile.name}"
             android:textColor="@color/black"
@@ -52,8 +52,8 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             tools:text="Hello, Nice to meet you! How are you doing? I'm currently doing the Chope Group's technical assignment."
-            android:layout_marginLeft="@dimen/spacing_minor"
-            android:layout_marginRight="@dimen/spacing_extra"
+            android:layout_marginStart="@dimen/spacing_minor"
+            android:layout_marginEnd="@dimen/spacing_extra"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="@id/guideline"
             app:layout_constraintLeft_toRightOf="@id/tv_name_chat"

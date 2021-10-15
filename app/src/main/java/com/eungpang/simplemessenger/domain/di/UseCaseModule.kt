@@ -6,10 +6,7 @@ import com.eungpang.simplemessenger.domain.chat.GetChatHistoryUseCase
 import com.eungpang.simplemessenger.domain.chat.GetChatHistoryUseCaseImpl
 import com.eungpang.simplemessenger.domain.chat.SendMessageUseCase
 import com.eungpang.simplemessenger.domain.chat.SendMessageUseCaseImpl
-import com.eungpang.simplemessenger.domain.friend.GetFriendsListUseCase
-import com.eungpang.simplemessenger.domain.friend.GetFriendsListUseCaseImpl
-import com.eungpang.simplemessenger.domain.friend.GetUserProfileUseCase
-import com.eungpang.simplemessenger.domain.friend.GetUserProfileUseCaseImpl
+import com.eungpang.simplemessenger.domain.friend.*
 import com.eungpang.simplemessenger.shared.di.IoDispatcher
 import dagger.Module
 import dagger.Provides
@@ -19,25 +16,21 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 @InstallIn(SingletonComponent::class)
 @Module
-class UseCaseModule {
+object UseCaseModule {
     @Provides
     fun provideGetFriendsListUseCase(
         repository: FriendsRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): GetFriendsListUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return GetFriendsListUseCaseImpl(repository, dispatcher)
     }
 
     @Provides
-    fun provideGetChatHistoryUseCase(
-        repository: ChatRepository,
+    fun provideAddUserProfileUseCase(
+        repository: FriendsRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
-    ): GetChatHistoryUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
-        return GetChatHistoryUseCaseImpl(repository, dispatcher)
+    ): AddUserProfileUseCase {
+        return AddUserProfileUseCaseImpl(repository, dispatcher)
     }
 
     @Provides
@@ -45,9 +38,15 @@ class UseCaseModule {
         repository: FriendsRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): GetUserProfileUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return GetUserProfileUseCaseImpl(repository, dispatcher)
+    }
+
+    @Provides
+    fun provideGetChatHistoryUseCase(
+        repository: ChatRepository,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): GetChatHistoryUseCase {
+        return GetChatHistoryUseCaseImpl(repository, dispatcher)
     }
 
     @Provides
@@ -55,8 +54,6 @@ class UseCaseModule {
         repository: ChatRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): SendMessageUseCase {
-        // TODO: For testing,
-        //  It's better to have multiple buildTypes
         return SendMessageUseCaseImpl(repository, dispatcher)
     }
 }

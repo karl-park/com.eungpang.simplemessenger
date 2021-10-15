@@ -31,11 +31,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/spacing_major"
+        android:layout_marginEnd="@dimen/spacing_major"
         android:layout_marginBottom="@dimen/spacing_extra"
+        app:fabSize="mini"
+        app:tint="@color/white"
+        android:backgroundTint="@color/purple_500"
+        app:srcCompat="@drawable/ic_add_white_24"
         android:id="@+id/fab_friends"
         android:gravity="center"
         android:text="@string/fab_extend"

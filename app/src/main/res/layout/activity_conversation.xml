@@ -57,7 +57,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/iv_send_button_chat"
                 app:layout_constraintBottom_toBottomOf="@id/iv_send_button_chat"
-                android:layout_marginRight="@dimen/spacing_major"
+                android:layout_marginEnd="@dimen/spacing_major"
                 android:id="@+id/et_message_chat"
                 android:paddingLeft="@dimen/spacing_major"
                 android:layout_width="0dp"

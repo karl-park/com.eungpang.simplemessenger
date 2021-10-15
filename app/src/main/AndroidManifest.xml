@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.eungpang.simplemessenger">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -12,6 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SimpleMessenger">
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.chat.ConversationActivity"
             android:exported="true" />
@@ -31,5 +32,7 @@
             android:name=".ui.MainActivity"
             android:exported="true" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
