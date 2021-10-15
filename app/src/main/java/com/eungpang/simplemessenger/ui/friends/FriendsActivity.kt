@@ -36,6 +36,7 @@ class FriendsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFriendsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarFriends)
 
         initializeViews()
         viewModel.friends.observe(this, ::handleFriendsList)
@@ -69,6 +70,6 @@ class FriendsActivity : AppCompatActivity() {
              setHasFixedSize(true)
         }
 
-        binding.toolbarFriends.title = "My friends"
+        supportActionBar?.title = "My friends"
     }
 }

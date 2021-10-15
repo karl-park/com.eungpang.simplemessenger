@@ -77,7 +77,7 @@ class ConversationActivity : AppCompatActivity() {
             adapter = this@ConversationActivity.adapter
         }
 
-        binding.toolbarChat.title = friendName ?: "Chat"
+        supportActionBar?.title = friendName ?: "Chat"
 
         binding.ivSendButtonChat.setOnClickListener {
             val message = binding.etMessageChat.text?.toString()
