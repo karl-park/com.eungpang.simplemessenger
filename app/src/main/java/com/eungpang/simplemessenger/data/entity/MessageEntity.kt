@@ -21,7 +21,7 @@ data class MessageEntity(
         override fun mapTo(from: MessageEntity): Message =
             Message(
                 authorId = from.authorId,
-                friendId = Message.parseUsersFromRoomId(from.roomId)?.second ?: "",
+                friendId = Message.parseFriendIdFromRoomId(from.authorId, from.roomId),
                 message = from.message,
                 createdDate = from.createdDate,
                 imageUrl = from.imageUrl,

@@ -23,9 +23,10 @@ data class Message(
             return listOf(loggedInId, friendId).sorted().joinToString(DELIMITER)
         }
 
-        fun parseUsersFromRoomId(roomId: String) : Pair<String, String>? {
-            val elements = roomId.split(DELIMITER)
-            return try { Pair(elements[0], elements[1]) } catch (e: Exception) { null }
+        fun parseFriendIdFromRoomId(loggedInId: String, roomId: String) : String {
+            return roomId.split(DELIMITER).first {
+                it != loggedInId
+            }
         }
     }
 
