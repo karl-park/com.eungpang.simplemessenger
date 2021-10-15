@@ -1,15 +1,18 @@
 package com.eungpang.simplemessenger.domain.chat
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Parcelize
 data class Message(
     val authorId: String,
     val roomId: String,
     val message: String,
     val createdDate: Date = Date(),
     val imageUrl: String? = null
-) {
+) : Parcelable {
     companion object {
         const val TIME_FORMAT = "hh:mm a"
         const val DATE_FORMAT = "dd MMM yy"

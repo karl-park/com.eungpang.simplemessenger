@@ -10,11 +10,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 class DataModule {
     @Provides
+    @Singleton
     fun providesFriendsRepository(
         @ApplicationContext applicationContext: Context
     ): FriendsRepository {
@@ -24,6 +26,7 @@ class DataModule {
     }
 
     @Provides
+    @Singleton
     fun providesChatRepository(
         @ApplicationContext applicationContext: Context
     ): ChatRepository {

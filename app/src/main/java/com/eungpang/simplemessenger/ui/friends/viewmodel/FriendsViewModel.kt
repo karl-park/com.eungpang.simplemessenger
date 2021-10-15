@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.eungpang.simplemessenger.domain.chat.GetChatHistoryUseCase
 import com.eungpang.simplemessenger.domain.chat.Message
 import com.eungpang.simplemessenger.domain.common.Result
 import com.eungpang.simplemessenger.domain.friend.GetFriendsListUseCase
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class FriendsViewModel @Inject constructor(
     app: Application,
     private val getFriendsListUseCase: GetFriendsListUseCase,
+    private val getChatHistoryUseCase: GetChatHistoryUseCase
 ) : AndroidViewModel(app) {
     private val userId: String
 
@@ -46,8 +48,20 @@ class FriendsViewModel @Inject constructor(
                 is Result.Success -> {
                     _friends.postValue(
                         result.data.map {
-                            // TODO: need to retreive lastMessage
-                            FriendViewItem(it, null, ::onClickFriendViewItem)
+                            val roomId = retrieveRoomId(userId, it.userId)
+                            val getLastChatHistoryResult = getChatHistoryUseCase.invoke(
+                                roomId,
+                                0,
+                                1
+                            )
+                            val lastMessage = when (getLastChatHistoryResult) {
+                                is Result.Success -> {
+                                    getLastChatHistoryResult.data.lastOrNull()
+                                }
+                                else -> null
+                            }
+
+                            FriendViewItem(it, lastMessage, ::onClickFriendViewItem)
                         }
                     )
                 }
@@ -61,10 +75,25 @@ class FriendsViewModel @Inject constructor(
         }
     }
 
+    fun updateLastMessage(friendId: String, message: Message) {
+        val friendList = _friends.value ?: return
+        _friends.value = friendList.map {
+            if (it.user.userId == friendId) {
+                it.copy(lastMessage = message)
+            } else it
+        }
+    }
+
     private fun onClickFriendViewItem(profile: Profile) {
         // Todo: need to redirect user to Conversation View
         Timber.d("Friend View Item Clicked: $profile")
         actionState.postValue(ActionState.GoToConversationView(profile))
+    }
+
+    private fun retrieveRoomId(loggedInId: String, friendId: String) : String {
+        // TODO: do refactoring to pass just loggedInId and friendId
+        //  RoomId should be calculated from UseCases or Repositories.
+        return listOf(loggedInId, friendId).sorted().joinToString("||")
     }
 }
 

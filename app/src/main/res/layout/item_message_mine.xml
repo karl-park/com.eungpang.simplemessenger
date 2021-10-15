@@ -17,6 +17,15 @@
         android:paddingRight="@dimen/spacing_minor"
         android:paddingBottom="@dimen/spacing_major">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
         <androidx.appcompat.widget.AppCompatImageView
             tools:src="@drawable/ic_launcher_foreground"
             app:layout_constraintTop_toTopOf="parent"
@@ -34,6 +43,9 @@
             android:layout_marginRight="@dimen/spacing_nano"
             android:id="@+id/tv_name_chat"
             android:text="@{item.profile.name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold"
             android:maxLines="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -44,10 +56,11 @@
             android:layout_marginLeft="@dimen/spacing_extra"
             android:layout_marginRight="@dimen/spacing_minor"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/guideline"
             app:layout_constraintRight_toLeftOf="@id/tv_name_chat"
             android:id="@+id/tv_message_chat"
             android:text="@{item.message.message}"
+            android:textColor="@color/black"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
@@ -61,7 +74,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             tools:text="12:35"
             app:layout_constraintTop_toBottomOf="@id/barrier_bottom"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toRightOf="@id/tv_message_chat"
             android:layout_marginTop="@dimen/spacing_minor"
             android:id="@+id/tv_message_date_chat"
             android:textSize="@dimen/text_mini"

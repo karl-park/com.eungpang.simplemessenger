@@ -12,16 +12,6 @@ interface FriendsRepository {
     suspend fun getUserProfile(userId: String) : Profile?
 }
 
-class FriendsRepositoryImpl: FriendsRepository {
-    override suspend fun findFriends(userId: String): List<Profile> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getUserProfile(userId: String): Profile? {
-        TODO("Not yet implemented")
-    }
-}
-
 class MockFriendsRepositoryImpl(
     private val applicationContext: Context
 ): FriendsRepository {

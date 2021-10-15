@@ -1,12 +1,13 @@
 package com.eungpang.simplemessenger.ui.friends
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eungpang.simplemessenger.R
 import com.eungpang.simplemessenger.databinding.ActivityFriendsBinding
+import com.eungpang.simplemessenger.domain.chat.Message
 import com.eungpang.simplemessenger.ui.chat.ConversationActivity
 import com.eungpang.simplemessenger.ui.extension.showToast
 import com.eungpang.simplemessenger.ui.friends.adapter.FriendsAdapter
@@ -20,6 +21,16 @@ class FriendsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFriendsBinding
     private lateinit var adapter: FriendsAdapter
+
+    private val getLastUpdatedMessage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val lastMessage = it.data?.getParcelableExtra<Message>(ConversationActivity.INTENT_KEY_LAST_MESSAGE)
+            val friendId = it.data?.getStringExtra(ConversationActivity.INTENT_KEY_FRIEND_ID)
+            if (lastMessage != null && friendId != null) {
+                viewModel.updateLastMessage(friendId, lastMessage)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +50,8 @@ class FriendsActivity : AppCompatActivity() {
     private fun handleActionState(actionState: FriendsViewModel.ActionState) {
         when (actionState) {
             is FriendsViewModel.ActionState.GoToConversationView -> {
-                ConversationActivity.startActivity(
-                    this, actionState.friendProfile.userId
+                getLastUpdatedMessage.launch(
+                    ConversationActivity.getIntent(this, actionState.friendProfile.userId)
                 )
             }
             is FriendsViewModel.ActionState.ShowToastMessage -> {

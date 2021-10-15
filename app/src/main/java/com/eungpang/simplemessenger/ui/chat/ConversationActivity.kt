@@ -1,5 +1,6 @@
 package com.eungpang.simplemessenger.ui.chat
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eungpang.simplemessenger.databinding.ActivityConversationBinding
 import com.eungpang.simplemessenger.ui.chat.adapter.ConversationAdapter
 import com.eungpang.simplemessenger.ui.chat.viewmodel.ConversationViewModel
+import com.eungpang.simplemessenger.ui.extension.hideKeyboard
 import com.eungpang.simplemessenger.ui.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,14 +23,13 @@ class ConversationActivity : AppCompatActivity() {
     private lateinit var adapter: ConversationAdapter
 
     companion object {
-        private const val INTENT_KEY_FRIEND_ID = "friendId"
-        fun startActivity(context: Context, friendId: String) {
-            context.startActivity(
-                Intent(context, ConversationActivity::class.java).apply {
-                    putExtra(INTENT_KEY_FRIEND_ID, friendId)
-                }
-            )
-        }
+        const val INTENT_KEY_LAST_MESSAGE = "lastMessage"
+        const val INTENT_KEY_FRIEND_ID = "friendId"
+
+        fun getIntent(context: Context, friendId: String) =
+            Intent(context, ConversationActivity::class.java).apply {
+                putExtra(INTENT_KEY_FRIEND_ID, friendId)
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,15 +73,28 @@ class ConversationActivity : AppCompatActivity() {
             }
 
             binding.etMessageChat.setText("")
+            hideKeyboard()
             viewModel.onClickSendMessage(message)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            finish()
+            goBack()
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        goBack()
+    }
+
+    private fun goBack() {
+        setResult(Activity.RESULT_OK, Intent().apply {
+            putExtra(INTENT_KEY_LAST_MESSAGE, viewModel.lastMessage)
+            putExtra(INTENT_KEY_FRIEND_ID, viewModel.friendId)
+        })
+        finish()
     }
 }

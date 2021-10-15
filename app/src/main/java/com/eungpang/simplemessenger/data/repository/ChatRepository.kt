@@ -18,20 +18,6 @@ interface ChatRepository {
     ): Boolean
 }
 
-class ChatRepositoryImpl: ChatRepository {
-    override suspend fun retrieveChatHistory(
-        roomId: String,
-        page: Int,
-        limit: Int
-    ): List<Message> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun sendMessage(message: Message): Boolean {
-        TODO("Not yet implemented")
-    }
-}
-
 class MockChatRepositoryImpl(
     private val applicationContext: Context
 ): ChatRepository {

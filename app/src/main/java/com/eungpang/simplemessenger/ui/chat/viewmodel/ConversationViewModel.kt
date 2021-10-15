@@ -15,6 +15,7 @@ import com.eungpang.simplemessenger.domain.friend.Profile
 import com.eungpang.simplemessenger.shared.ConstantPref
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,12 +31,18 @@ class ConversationViewModel @Inject constructor(
 
     var currentPage = 0
     private val userId: String
-    private lateinit var myProfile: Profile
-    private lateinit var friendId: String
-    private lateinit var friendProfile: Profile
+    private lateinit var _myProfile: Profile
+    private lateinit var _friendId: String
+    private lateinit var _friendProfile: Profile
 
     private val _messages = MutableLiveData<List<ChatViewItem>>()
     val messages: LiveData<List<ChatViewItem>> = _messages
+
+    val lastMessage: Message?
+        get() = messages.value?.last()?.message
+
+    val friendId: String
+        get() = _friendId
 
     init {
         val pref = app.getSharedPreferences(ConstantPref.KEY_PREF_NAME, Application.MODE_PRIVATE)
@@ -44,7 +51,7 @@ class ConversationViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = getUserProfileUseCase.invoke(userId)) {
                 is Result.Success -> {
-                    myProfile = result.data
+                    _myProfile = result.data
                 }
                 else -> {
                     // TODO: error, user not found
@@ -55,7 +62,7 @@ class ConversationViewModel @Inject constructor(
 
     fun loadChatHistory(friendId: String) {
         viewModelScope.launch {
-            this@ConversationViewModel.friendId = friendId
+            this@ConversationViewModel._friendId = friendId
             val roomId = retrieveRoomId(userId, friendId)
             val result = getChatHistoryUseCase.invoke(
                 roomId,
@@ -64,22 +71,22 @@ class ConversationViewModel @Inject constructor(
             )
 
             // Load Friend Profile Once
-            if (::friendProfile.isInitialized.not()) {
+            if (::_friendProfile.isInitialized.not()) {
                 val friendProfileResult = getUserProfileUseCase.invoke(friendId)
                 if (friendProfileResult !is Result.Success) {
                     // TODO: show alert/toast or retry button to load chat history
                     return@launch
                 }
-                friendProfile = friendProfileResult.data
+                _friendProfile = friendProfileResult.data
             }
 
             when (result) {
                 is Result.Success -> {
                     _messages.postValue(result.data.map {
                         if (it.authorId == userId) {
-                            ChatViewItem.MyMessage(myProfile, it)
+                            ChatViewItem.MyMessage(_myProfile, it)
                         } else {
-                            ChatViewItem.FriendMessage(friendProfile, it)
+                            ChatViewItem.FriendMessage(_friendProfile, it)
                         }
                     })
                 }
@@ -94,7 +101,7 @@ class ConversationViewModel @Inject constructor(
         sendMessageToFriend(
             Message(
                 userId,
-                retrieveRoomId(userId, friendProfile.userId),
+                retrieveRoomId(userId, _friendProfile.userId),
                 message
             )
         )
@@ -107,7 +114,7 @@ class ConversationViewModel @Inject constructor(
                     val msg = _messages.value ?: emptyList()
                     val newMessage = mutableListOf<ChatViewItem>().apply {
                         addAll(msg)
-                        add(ChatViewItem.MyMessage(myProfile, message))
+                        add(ChatViewItem.MyMessage(_myProfile, message))
                     }
                     _messages.postValue(newMessage)
                     handleBotBehavior(message)
@@ -120,19 +127,24 @@ class ConversationViewModel @Inject constructor(
     }
 
     private fun handleBotBehavior(message: Message) {
-        if (friendProfile.botType == null) return
+        if (_friendProfile.botType == null) return
 
         viewModelScope.launch {
-            when (friendProfile.botType) {
+            when (_friendProfile.botType) {
                 BotType.EchoBot -> {
-                    when (sendMessageUseCase.invoke(message)) {
+                    val newMessage = message.copy(
+                        authorId = friendId,
+                        createdDate = Date()
+                    )
+
+                    when (sendMessageUseCase.invoke(newMessage)) {
                         is Result.Success -> {
                             val msg = _messages.value ?: emptyList()
-                            val newMessage = mutableListOf<ChatViewItem>().apply {
+                            val newMessages = mutableListOf<ChatViewItem>().apply {
                                 addAll(msg)
-                                add(ChatViewItem.FriendMessage(friendProfile, message))
+                                add(ChatViewItem.FriendMessage(_friendProfile, newMessage))
                             }
-                            _messages.postValue(newMessage)
+                            _messages.postValue(newMessages)
                         }
                         else -> {
 
