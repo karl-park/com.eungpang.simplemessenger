@@ -4,10 +4,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class Message(
-    val userId: String,
+    val authorId: String,
+    val roomId: String,
     val message: String,
-    val imageUrl: String? = null,
     val createdDate: Date,
+    val imageUrl: String? = null,
     val hasSent: Boolean
 ) {
     companion object {

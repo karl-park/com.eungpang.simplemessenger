@@ -10,6 +10,7 @@ import com.eungpang.simplemessenger.domain.common.Result
 import com.eungpang.simplemessenger.domain.friend.GetFriendsListUseCase
 import com.eungpang.simplemessenger.domain.friend.Profile
 import com.eungpang.simplemessenger.shared.ConstantPref
+import com.eungpang.simplemessenger.shared.livedata.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -25,13 +26,23 @@ class FriendsViewModel @Inject constructor(
     private val _friends = MutableLiveData<List<FriendViewItem>>()
     val friends: LiveData<List<FriendViewItem>> = _friends
 
+    val actionState = SingleLiveEvent<ActionState>()
+    sealed class ActionState {
+        class GoToConversationView(
+            val friendProfile: Profile
+        ): ActionState()
+
+        class ShowToastMessage(
+            val message: String
+        ): ActionState()
+    }
+
     init {
         val pref = app.getSharedPreferences(ConstantPref.KEY_PREF_NAME, Application.MODE_PRIVATE)
         userId = pref.getString(ConstantPref.KEY_USER_ID, null)!! // If it's null, should throw exception or redirect user to logout view
 
         viewModelScope.launch {
-            val result = getFriendsListUseCase.invoke(userId)
-            when (result) {
+            when (val result = getFriendsListUseCase.invoke(userId)) {
                 is Result.Success -> {
                     _friends.postValue(
                         result.data.map {
@@ -53,6 +64,7 @@ class FriendsViewModel @Inject constructor(
     private fun onClickFriendViewItem(profile: Profile) {
         // Todo: need to redirect user to Conversation View
         Timber.d("Friend View Item Clicked: $profile")
+        actionState.postValue(ActionState.GoToConversationView(profile))
     }
 }
 

@@ -4,4 +4,7 @@
 
     <string name="fab_extend">Extend</string>
 
+    <!-- Conversation -->
+    <string name="chat_hint_text">Message</string>
+
 </resources>

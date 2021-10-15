@@ -10,6 +10,10 @@
     <!-- Friends View -->
     <dimen name="size_avatar_image">36dp</dimen>
 
+    <!-- Conversation View -->
+    <dimen name="size_avatar_image_chatroom">24dp</dimen>
+
+
     <dimen name="text_title">14sp</dimen>
     <dimen name="text_subtitle">12sp</dimen>
     <dimen name="text_mini">8sp</dimen>
