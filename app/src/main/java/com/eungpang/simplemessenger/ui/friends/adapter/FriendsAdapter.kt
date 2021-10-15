@@ -1,23 +1,23 @@
 package com.eungpang.simplemessenger.ui.friends.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.eungpang.simplemessenger.databinding.ItemFriendsBinding
 import com.eungpang.simplemessenger.ui.friends.viewmodel.FriendViewItem
 
-// TODO: need to pass event handler(or it can be inside of ViewData class)
-class FriendsAdapter(
-
-): RecyclerView.Adapter<FriendsAdapter.FriendViewHolder>() {
+class FriendsAdapter: RecyclerView.Adapter<FriendsAdapter.FriendViewHolder>() {
     private val _friends = mutableListOf<FriendViewItem>()
+
+    @SuppressLint("NotifyDataSetChanged")
     fun setFriends(friends: List<FriendViewItem>) {
         _friends.run {
             clear()
             addAll(friends)
         }
 
-        // TODO: We can use DiffUtils to optimize the performance
+        // Note: We can use DiffUtils to optimize the performance
         notifyDataSetChanged()
     }
 
@@ -38,7 +38,6 @@ class FriendsAdapter(
         private val binding: ItemFriendsBinding
     ): RecyclerView.ViewHolder(binding.root) {
         fun bind(viewItem: FriendViewItem) {
-            // TODO: bind it (data + events)
             binding.item = viewItem
             binding.executePendingBindings()
         }

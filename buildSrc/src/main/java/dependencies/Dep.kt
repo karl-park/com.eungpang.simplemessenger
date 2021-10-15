@@ -12,7 +12,7 @@ object Configs {
     const val minSdkVersion = 21
     const val targetSdkVersion = 31
     const val versionCode = 1
-    const val versionName = "1.0"
+    const val versionName = "1.0.0"
 }
 
 object Kotlin {
@@ -47,6 +47,13 @@ object AndroidX {
         private const val version = "2.3.5"
         const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
         const val ui = "androidx.navigation:navigation-ui-ktx:$version"
+    }
+
+    object Room {
+        private const val roomVersion = "2.3.0"
+        const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
+        const val roomKapt = "androidx.room:room-compiler:$roomVersion"
+        const val roomKtx = "androidx.room:room-ktx:$roomVersion"
     }
 }
 

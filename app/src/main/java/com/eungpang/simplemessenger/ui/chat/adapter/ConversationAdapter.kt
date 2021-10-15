@@ -1,5 +1,6 @@
 package com.eungpang.simplemessenger.ui.chat.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
@@ -12,13 +13,15 @@ import com.eungpang.simplemessenger.ui.chat.viewmodel.ChatViewItem
 
 class ConversationAdapter: RecyclerView.Adapter<ConversationAdapter.MessageViewHolder<ViewDataBinding>>() {
     private val _messages = mutableListOf<ChatViewItem>()
+
+    @SuppressLint("NotifyDataSetChanged")
     fun setMessages(messages: List<ChatViewItem>) {
         _messages.run {
             clear()
             addAll(messages)
         }
 
-        // TODO: We can use DiffUtils to optimize the performance
+        // NOTE: We can use DiffUtils to optimize the performance
         notifyDataSetChanged()
     }
 

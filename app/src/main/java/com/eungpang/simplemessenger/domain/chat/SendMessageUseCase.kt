@@ -23,7 +23,7 @@ class SendMessageUseCaseImpl @Inject constructor(
         try {
             withContext(dispatcher) {
                 // For mocking network delay
-                delay(300L)
+                delay(200L)
 
                 val result  = repo.sendMessage(message)
 
