@@ -5,8 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.eungpang.simplemessenger.domain.bot.BotType
 import com.eungpang.simplemessenger.domain.chat.GetChatHistoryUseCase
 import com.eungpang.simplemessenger.domain.chat.Message
+import com.eungpang.simplemessenger.domain.chat.SendMessageUseCase
 import com.eungpang.simplemessenger.domain.common.Result
 import com.eungpang.simplemessenger.domain.friend.GetUserProfileUseCase
 import com.eungpang.simplemessenger.domain.friend.Profile
@@ -18,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ConversationViewModel @Inject constructor(
     app: Application,
+    private val sendMessageUseCase: SendMessageUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getChatHistoryUseCase: GetChatHistoryUseCase
 ) : AndroidViewModel(app) {
@@ -28,6 +31,8 @@ class ConversationViewModel @Inject constructor(
     var currentPage = 0
     private val userId: String
     private lateinit var myProfile: Profile
+    private lateinit var friendId: String
+    private lateinit var friendProfile: Profile
 
     private val _messages = MutableLiveData<List<ChatViewItem>>()
     val messages: LiveData<List<ChatViewItem>> = _messages
@@ -50,6 +55,7 @@ class ConversationViewModel @Inject constructor(
 
     fun loadChatHistory(friendId: String) {
         viewModelScope.launch {
+            this@ConversationViewModel.friendId = friendId
             val roomId = retrieveRoomId(userId, friendId)
             val result = getChatHistoryUseCase.invoke(
                 roomId,
@@ -57,12 +63,15 @@ class ConversationViewModel @Inject constructor(
                 DEFAULT_LIMIT
             )
 
-            val friendProfileResult = getUserProfileUseCase.invoke(friendId)
-            if (friendProfileResult !is Result.Success) {
-                // TODO: show alert/toast or retry button to load chat history
-                return@launch
+            // Load Friend Profile Once
+            if (::friendProfile.isInitialized.not()) {
+                val friendProfileResult = getUserProfileUseCase.invoke(friendId)
+                if (friendProfileResult !is Result.Success) {
+                    // TODO: show alert/toast or retry button to load chat history
+                    return@launch
+                }
+                friendProfile = friendProfileResult.data
             }
-            val friendProfile = friendProfileResult.data
 
             when (result) {
                 is Result.Success -> {
@@ -81,7 +90,62 @@ class ConversationViewModel @Inject constructor(
         }
     }
 
+    fun onClickSendMessage(message: String) {
+        sendMessageToFriend(
+            Message(
+                userId,
+                retrieveRoomId(userId, friendProfile.userId),
+                message
+            )
+        )
+    }
+
+    private fun sendMessageToFriend(message: Message) {
+        viewModelScope.launch {
+            when (sendMessageUseCase.invoke(message)) {
+                is Result.Success -> {
+                    val msg = _messages.value ?: emptyList()
+                    val newMessage = mutableListOf<ChatViewItem>().apply {
+                        addAll(msg)
+                        add(ChatViewItem.MyMessage(myProfile, message))
+                    }
+                    _messages.postValue(newMessage)
+                    handleBotBehavior(message)
+                }
+                else -> {
+
+                }
+            }
+        }
+    }
+
+    private fun handleBotBehavior(message: Message) {
+        if (friendProfile.botType == null) return
+
+        viewModelScope.launch {
+            when (friendProfile.botType) {
+                BotType.EchoBot -> {
+                    when (sendMessageUseCase.invoke(message)) {
+                        is Result.Success -> {
+                            val msg = _messages.value ?: emptyList()
+                            val newMessage = mutableListOf<ChatViewItem>().apply {
+                                addAll(msg)
+                                add(ChatViewItem.FriendMessage(friendProfile, message))
+                            }
+                            _messages.postValue(newMessage)
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun retrieveRoomId(loggedInId: String, friendId: String) : String {
+        // TODO: do refactoring to pass just loggedInId and friendId
+        //  RoomId should be calculated from UseCases or Repositories.
         return listOf(loggedInId, friendId).sorted().joinToString("||")
     }
 }

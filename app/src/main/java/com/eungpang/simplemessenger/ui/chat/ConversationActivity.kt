@@ -3,6 +3,7 @@ package com.eungpang.simplemessenger.ui.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +34,10 @@ class ConversationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityConversationBinding.inflate(layoutInflater)
+        binding.viewmodel = viewModel
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarChat)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val friendId = intent.getStringExtra(INTENT_KEY_FRIEND_ID)
         if (friendId == null) {
@@ -59,5 +63,24 @@ class ConversationActivity : AppCompatActivity() {
         }
 
         binding.toolbarChat.title = "Chat"
+
+        binding.ivSendButtonChat.setOnClickListener {
+            val message = binding.etMessageChat.text?.toString()
+            if (message.isNullOrBlank()) {
+                // If it's empty, do nothing
+                return@setOnClickListener
+            }
+
+            binding.etMessageChat.setText("")
+            viewModel.onClickSendMessage(message)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

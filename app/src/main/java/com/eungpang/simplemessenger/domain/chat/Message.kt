@@ -7,9 +7,8 @@ data class Message(
     val authorId: String,
     val roomId: String,
     val message: String,
-    val createdDate: Date,
-    val imageUrl: String? = null,
-    val hasSent: Boolean
+    val createdDate: Date = Date(),
+    val imageUrl: String? = null
 ) {
     companion object {
         const val TIME_FORMAT = "hh:mm a"
